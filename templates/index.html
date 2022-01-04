@@ -9,21 +9,31 @@
     <meta property="og:description" content="오름을 오르며 힐링하는 특별한 제주여행"/>
     <meta property="og:image" content="http://image14.hanatour.com/uploads/2019/09/_DSC1602_95637764.jpeg"/>
 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
     <title>오름, 쉬멍</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gowun+Dodum&family=Nanum+Myeongjo&display=swap"
-          rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap');
+
         * {
-            font-family: 'Do Hyeon', sans-serif;
-            font-family: 'Gowun Dodum', sans-serif;
-            font-family: 'Nanum Myeongjo', serif;
+            font-family: 'Noto Serif KR', serif;
         }
 
         body {
-            height: 1800px;
-
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://image14.hanatour.com/uploads/2019/09/_DSC1602_95637764.jpeg');
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('http://image14.hanatour.com/uploads/2019/09/_DSC1602_95637764.jpeg');
             background-position: center;
             background-size: cover;
         }
@@ -31,69 +41,198 @@
         .mytitle {
             color: white;
             text-align: center;
-            margin-top: 70px;
+            margin-top: 30px;
         }
 
-        .myintro {
+        .mycard {
+            width: 800px;
+            height: auto;
             background-color: rgba(255, 255, 255, 0.5);
-            margin-right: 400px;
-            margin-left: 400px;
+            margin: 20px auto;
             padding: 10px;
         }
 
-        .card-title{
-            font-size: 32px; font-weight: bold;
+        .reviewbutton {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
         }
+
+        .card-title {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
         .card-ul {
-            font-size: 16px; line-height: 200%;
+            font-size: 16px;
+            line-height: 200%;
+        }
+
+        #post-box {
+            width: 500px;
+            height: auto;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .mybtns {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 20px;
+        }
+
+        .table {
+            width: 500px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
         }
 
     </style>
     <script>
+        $(document).ready(function () {
+            $('#post').empty()
+            $('#reviewinfor').empty()
+        });
 
+        function review_listing() {
+            $.ajax({
+                type: "GET",
+                url: "/review",
+                data: {},
+                success: function (response) {
+                    let reviews = response['all_reviews']
+                    for (let i = 0; i < reviews.length; i++) {
+                        let name = reviews[i]['name']
+                        let comment = reviews[i]['comment']
+
+                        let temp_html = `<tr>
+                                            <th scope="row">${name}</th>
+                                            <td>${comment}</td>
+                                        </tr>`
+                        $('#reviewinfor').append(temp_html)
+                    }
+                }
+            })
+        }
+
+        function posting() {
+            let name = $('#post-name').val()
+            let comment = $('#post-comment').val()
+
+            $.ajax({
+                type: "POST",
+                url: "/review",
+                data: {name_give: name, comment_give: comment},
+                success: function (response) {
+                    alert(response["msg"]);
+                    window.location.reload();
+                }
+            })
+        }
+
+        function openClose() {
+            if ($("#review-box").css("display") == "block") {
+                $("#review-box").hide();
+                $("#openclosebtn").text("리뷰 작성하기");
+            } else {
+                $("#review-box").show();
+                $("#openclosebtn").text("리뷰 창 닫기");
+            }
+        }
     </script>
 </head>
 <body>
-<div class="mytitle">
-    <h1>오름, 쉬멍</h1>
-    <h2>오름을 오르며 힐링하는 특별한 제주여행</h2>
-    <br>
-    <p>제주의 현재온도는 <span id="temp"><b>36</span>도</b></p>
+<div class="wrap">
+    <div class="mytitle">
+        <h1><b>오름, 쉬멍</b></h1>
+        <h4>오름을 오르며 힐링하는 특별한 제주여행</h4>
+        <br>
+        <p>제주의 현재온도는 <span id="temp"><b>10</span>도</b></p>
 
-    <img src="jejudo_map.png" usemap="#image-map">
+        <img src="C:\Users\CHA\Desktop\MJproject\oreum\templates\jejudo_map.png" usemap="#image-map">
 
-    <map name="image-map">
-        <area target="" alt="한경면 오름 보기" title="한경면 오름 보기" href="" coords="218,433,30" shape="circle">
-        <area target="" alt="한림읍 오름 보기" title="한림읍 오름 보기" href="" coords="285,360,29" shape="circle">
-        <area target="" alt="애월읍 오름 보기" title="애월읍 오름 보기" href="" coords="402,317,36" shape="circle">
-        <area target="" alt="제주시 오름 보기" title="제주시 오름 보기" href="" coords="597,259,39" shape="circle">
-        <area target="" alt="조천읍 오름 보기" title="조천읍 오름 보기" href="" coords="763,210,27" shape="circle">
-        <area target="" alt="구좌읍 오름 보기" title="구좌읍 오름 보기" href="" coords="895,188,35" shape="circle">
-        <area target="" alt="성산읍 오름 보기" title="성산읍 오름 보기" href="" coords="987,298,35" shape="circle">
-        <area target="" alt="표선면 오름 보기" title="표선면 오름 보기" href="" coords="875,354,35" shape="circle">
-        <area target="" alt="남원읍 오름 보기" title="남원읍 오름 보기" href="" coords="753,416,41" shape="circle">
-        <area target="" alt="서귀포시 오름 보기" title="서귀포시 오름 보기" href="" coords="622,471,37" shape="circle">
-        <area target="" alt="중문 오름 보기" title="중문 오름 보기" href="" coords="501,476,34" shape="circle">
-        <area target="" alt="안덕면 오름 보기" title="안덕면 오름 보기" href="" coords="344,475,31" shape="circle">
-        <area target="" alt="대정읍 오름 보기" title="대정읍 오름 보기" href="" coords="242,527,35" shape="circle">
-    </map>
-</div>
-<div class="myintro">
-    <div class="mycard">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">OO오름</h5>
-            <p class="card-text">이 오름은 너무나 멋져용</p>
-            <ul class="card-ul">
-                <li>위치 : 제주시 어딘가</li>
-                <li>정상 소요시간 : OO분</li>
-                <li>편의시설 : 뭐가 있을까?</li>
-            </ul>
+        <map name="image-map">
+            <area target="" alt="한경면" title="한경면 오름 보기" href="" coords="218,433,30" shape="circle">
+            <area target="" alt="한림읍" title="한림읍 오름 보기" href="" coords="285,360,29" shape="circle">
+            <area target="" alt="애월읍" title="애월읍 오름 보기" href="" coords="402,317,36" shape="circle">
+            <area target="" alt="제주시" title="제주시 오름 보기" href="" coords="597,259,39" shape="circle">
+            <area target="" alt="조천읍" title="조천읍 오름 보기" href="" coords="763,210,27" shape="circle">
+            <area target="" alt="구좌읍" title="구좌읍 오름 보기" href="" coords="895,188,35" shape="circle">
+            <area target="" alt="성산읍" title="성산읍 오름 보기" href="" coords="987,298,35" shape="circle">
+            <area target="" alt="표선면" title="표선면 오름 보기" href="" coords="875,354,35" shape="circle">
+            <area target="" alt="남원읍" title="남원읍 오름 보기" href="" coords="753,416,41" shape="circle">
+            <area target="" alt="서귀포시" title="서귀포시 오름 보기" href="" coords="622,471,37" shape="circle">
+            <area target="" alt="중문" title="중문 오름 보기" href="" coords="501,476,34" shape="circle">
+            <area target="" alt="안덕면" title="안덕면 오름 보기" href="" coords="344,475,31" shape="circle">
+            <area target="" alt="대정읍" title="대정읍 오름 보기" href="" coords="242,527,35" shape="circle">
+        </map>
+    </div>
+    <div id="post">
+        <div class="mycard" id="cards-box">
+            <img src="https://api.cdn.visitjeju.net/photomng/imgpath/201804/30/a23c27ea-3590-437f-a735-f5cb2137545b.jpg"
+                 class="card-img-top" alt="솔오름">
+            <div class="card-body">
+                <h5 class="card-title">솔오름</h5>
+                <p class="card-text">서귀포시 뒷 쪽으로 한라산 중턱에서 동홍동과 토평동에 걸쳐져 있는 큰 기생화산체로, 남동사면으로 골이 패어 있는 말굽형 화구를 이루고 있다.
+                    전사면으로
+                    해송과
+                    삼나무가 조림되어 있고, 북동사면 일부에 상록수가 우거진 숲을 이루고 있으나, 예전에는 풀밭오름이었다고 한다.</p>
+                <ul class="card-ul">
+                    <li>위치 : 제주특별자치도 서귀포시 인정오름로 387-63</li>
+                    <li>정상 소요시간 : 20분</li>
+                    <li>편의시설 : 돈내코 유원지</li>
+                </ul>
+            </div>
+            <div class="reviewbutton">
+                <button onclick="openClose()" type="button" id="openclosebtn" class="btn btn-outline-dark">리뷰 작성하기
+                </button>
+            </div>
+        </div>
+        <div id="review-box">
+            <div id="post-box" class="form-post">
+                <div class="form-group">
+                    <label for="post-name">닉네임</label>
+                    <input id="post-name" class="form-control" placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="post-comment">코멘트</label>
+                    <textarea id="post-comment" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="mybtns">
+                    <button onclick="posting()" type="button" class="btn btn-outline-dark">기록하기</button>
+                    <button onclick="closing()" type="button" class="btn btn-outline-dark">닫기</button>
+                </div>
+            </div>
+            <table class="table" id="table-box">
+                <thead>
+                <tr>
+                    <th scope="col">닉네임</th>
+                    <th scope="col">코멘트</th>
+                </tr>
+                </thead>
+                <tbody id="reviewinfor">
+                <tr>
+                    <th scope="row">가나다</th>
+                    <td>완전 좋은 곳!</td>
+                </tr>
+                <tr>
+                    <th scope="row">아자차</th>
+                    <td>지금 여기 왔는데 너무 좋아요.</td>
+                </tr>
+                <tr>
+                    <th scope="row">타파하</th>
+                    <td>제주에 이런곳이!</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-<div>
-    2. 리뷰 창 생성 스파르타피디아 들고오기
-    2-1 닉네임, 코멘트. 작성하기 버튼, 닫기 버튼 생성
 </div>
 </body>
 </html>
