@@ -102,6 +102,16 @@
             $('#reviewinfor').empty()
         });
 
+        // 지도의 구역을 클릭하면 구역에 있는 오름의 설명 출력
+        // function jeju_mapping() {
+        //  $.ajax({
+        //      type: "GET",
+        //      url: "/review",
+        //      data: {},
+        //      success: function (response)
+        // }
+
+
         function review_listing() {
             $.ajax({
                 type: "GET",
@@ -116,6 +126,7 @@
                         let temp_html = `<tr>
                                             <th scope="row">${name}</th>
                                             <td>${comment}</td>
+                                            <td><button onclick="deletereview('${name}')" class="btn btn-outline-dark">삭제</button></td>
                                         </tr>`
                         $('#reviewinfor').append(temp_html)
                     }
@@ -145,6 +156,18 @@
                 $("#review-box").show();
                 $("#openclosebtn").text("리뷰 창 닫기");
             }
+        }
+
+        function deletereview(name) {
+            $.ajax({
+                type: 'POST',
+                url: '/delete',
+                data: {name_give:name},
+                success: function (response) {
+                    alert(response['msg']);
+                    window.location.reload()
+                }
+            });
         }
     </script>
 </head>
@@ -214,20 +237,24 @@
                 <tr>
                     <th scope="col">닉네임</th>
                     <th scope="col">코멘트</th>
+                    <th scope="col">비고</th>
                 </tr>
                 </thead>
                 <tbody id="reviewinfor">
                 <tr>
                     <th scope="row">가나다</th>
                     <td>완전 좋은 곳!</td>
+                    <td><button>삭제</button></td>
                 </tr>
                 <tr>
                     <th scope="row">아자차</th>
                     <td>지금 여기 왔는데 너무 좋아요.</td>
+                    <td><button>삭제</button></td>
                 </tr>
                 <tr>
                     <th scope="row">타파하</th>
                     <td>제주에 이런곳이!</td>
+                    <td><button>삭제</button></td>
                 </tr>
                 </tbody>
             </table>
