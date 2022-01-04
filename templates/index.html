@@ -179,7 +179,8 @@
         <br>
         <p>제주의 현재온도는 <span id="temp"><b>10</span>도</b></p>
 
-        <img src="jejudo_map.png" usemap="#image-map">
+        <img src="{{ url_for('static', filename='image/jejudo_map.png')}}">
+            <!--usemap="#image-map">-->
 
         <map name="image-map">
             <area target="" alt="한경면" title="한경면 오름 보기" href="" coords="218,433,30" shape="circle">
