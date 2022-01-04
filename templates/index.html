@@ -96,7 +96,9 @@
     </style>
     <script>
         $(document).ready(function () {
-            $('#post').empty()
+            // $('#post').hide()
+            $('#review-box').hide()
+            review_listing()
             $('#reviewinfor').empty()
         });
 
@@ -124,7 +126,6 @@
         function posting() {
             let name = $('#post-name').val()
             let comment = $('#post-comment').val()
-
             $.ajax({
                 type: "POST",
                 url: "/review",
@@ -155,7 +156,7 @@
         <br>
         <p>제주의 현재온도는 <span id="temp"><b>10</span>도</b></p>
 
-        <img src="C:\Users\CHA\Desktop\MJproject\oreum\templates\jejudo_map.png" usemap="#image-map">
+        <img src="jejudo_map.png" usemap="#image-map">
 
         <map name="image-map">
             <area target="" alt="한경면" title="한경면 오름 보기" href="" coords="218,433,30" shape="circle">
@@ -206,7 +207,6 @@
                 </div>
                 <div class="mybtns">
                     <button onclick="posting()" type="button" class="btn btn-outline-dark">기록하기</button>
-                    <button onclick="closing()" type="button" class="btn btn-outline-dark">닫기</button>
                 </div>
             </div>
             <table class="table" id="table-box">
