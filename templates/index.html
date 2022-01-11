@@ -26,28 +26,27 @@
     <title>오름, 쉬멍</title>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Stylish&display=swap');
 
         * {
-            font-family: 'Noto Serif KR', serif;
-        }
-
-        body {
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('http://image14.hanatour.com/uploads/2019/09/_DSC1602_95637764.jpeg');
-            background-position: center;
-            background-size: cover;
+            font-family: 'Stylish', sans-serif;
         }
 
         .mytitle {
-            color: white;
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('http://image14.hanatour.com/uploads/2019/09/_DSC1602_95637764.jpeg');
+            background-position: center;
+            background-size: cover;
+            width: auto;
+            height: 300px;
+            padding-top: 60px;
             text-align: center;
-            margin-top: 30px;
+            color: white;
         }
 
         .mycard {
             width: 800px;
             height: auto;
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: beige;
             margin: 20px auto;
             padding: 10px;
         }
@@ -74,7 +73,7 @@
             height: auto;
             margin: 20px auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: beige;
         }
 
         .mybtns {
@@ -90,26 +89,73 @@
             width: 500px;
             margin: 20px auto;
             padding: 10px;
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: beige;
         }
+
+        .deleteColor {
+            color: darkred;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            width: 100%;
+            margin-top: 30px;
+            padding: 0;
+            list-style-type: none;
+            color: beige;
+            font-weight: bold;
+        }
+
 
     </style>
     <script>
         $(document).ready(function () {
-            // $('#post').hide()
+            set_temp()
             $('#review-box').hide()
             review_listing()
             $('#reviewinfor').empty()
         });
 
         // 지도의 구역을 클릭하면 구역에 있는 오름의 설명 출력
-        // function jeju_mapping() {
-        //  $.ajax({
-        //      type: "GET",
-        //      url: "/review",
-        //      data: {},
-        //      success: function (response)
-        // }
+        //  function nav(title) {
+        //    $.ajax({
+        //        type: "GET",
+        //        url: "/nav/<title>",
+        //        data: {},
+        //        success: function (response) {
+        //            let Oreums = response['title_Oreums']
+        //            for (let i = 0; i< Oreums.length; i++) {
+        //                let name = Oreums[i]['name']
+        //                let location = Oreums[i]['location']
+        //                let leadtime = Oreums[i]['leadtime']
+        //                let convinient = Oreums[i]['convinient']
+        //                let description = Oreums[i]['description']
+        //                let img_url = Oreums[i]['img_url']
+        //
+        //                let temp_html = `<div class="mycard" id="cards-box">
+        //                                     <img src=${img_url}
+        //                                          class="card-img-top" alt=${name}>
+        //                                     <div class="card-body">
+        //                                         <h5 class="card-title">${name}</h5>
+        //                                         <p class="card-text">${description}</p>
+        //                                         <ul class="card-ul">
+        //                                             <li>위치 : ${location}</li>
+        //                                             <li>정상 소요시간 : ${leadtime}</li>
+        //                                             <li>편의시설 : ${convinient}</li>
+        //                                         </ul>
+        //                                     </div>
+        //                                     <div class="reviewbutton">
+        //                                         <button onclick="openClose()" type="button" id="openclosebtn" class="btn btn-outline-dark">리뷰 작성하기
+        //                                         </button>
+        //                                     </div>
+        //                                 </div>`
+        //                $('cards-box').append(temp_html)
+        //            }
+        //        }
+        //      }
+        //   }
 
 
         function review_listing() {
@@ -126,10 +172,21 @@
                         let temp_html = `<tr>
                                             <th scope="row">${name}</th>
                                             <td>${comment}</td>
-                                            <td><button onclick="deletereview('${name}')" class="btn btn-outline-dark">삭제</button></td>
+                                            <td><a href="#" onclick="deletereview('${name}')" class="deleteColor">삭제</a></td>
                                         </tr>`
                         $('#reviewinfor').append(temp_html)
                     }
+                }
+            })
+        }
+
+        function set_temp() {
+            $.ajax({
+                type: "GET",
+                url: "http://spartacodingclub.shop/sparta_api/weather/jeju",
+                data: {},
+                success: function (response) {
+                    $('#temp').text(response['temp'])
                 }
             })
         }
@@ -162,7 +219,7 @@
             $.ajax({
                 type: 'POST',
                 url: '/delete',
-                data: {name_give:name},
+                data: {name_give: name},
                 success: function (response) {
                     alert(response['msg']);
                     window.location.reload()
@@ -177,28 +234,53 @@
         <h1><b>오름, 쉬멍</b></h1>
         <h4>오름을 오르며 힐링하는 특별한 제주여행</h4>
         <br>
-        <p>제주의 현재온도는 <span id="temp"><b>10</span>도</b></p>
-
-        <img src="{{ url_for('static', filename='image/jejudo_map.png')}}">
-            <!--usemap="#image-map">-->
-
-        <map name="image-map">
-            <area target="" alt="한경면" title="한경면 오름 보기" href="" coords="218,433,30" shape="circle">
-            <area target="" alt="한림읍" title="한림읍 오름 보기" href="" coords="285,360,29" shape="circle">
-            <area target="" alt="애월읍" title="애월읍 오름 보기" href="" coords="402,317,36" shape="circle">
-            <area target="" alt="제주시" title="제주시 오름 보기" href="" coords="597,259,39" shape="circle">
-            <area target="" alt="조천읍" title="조천읍 오름 보기" href="" coords="763,210,27" shape="circle">
-            <area target="" alt="구좌읍" title="구좌읍 오름 보기" href="" coords="895,188,35" shape="circle">
-            <area target="" alt="성산읍" title="성산읍 오름 보기" href="" coords="987,298,35" shape="circle">
-            <area target="" alt="표선면" title="표선면 오름 보기" href="" coords="875,354,35" shape="circle">
-            <area target="" alt="남원읍" title="남원읍 오름 보기" href="" coords="753,416,41" shape="circle">
-            <area target="" alt="서귀포시" title="서귀포시 오름 보기" href="" coords="622,471,37" shape="circle">
-            <area target="" alt="중문" title="중문 오름 보기" href="" coords="501,476,34" shape="circle">
-            <area target="" alt="안덕면" title="안덕면 오름 보기" href="" coords="344,475,31" shape="circle">
-            <area target="" alt="대정읍" title="대정읍 오름 보기" href="" coords="242,527,35" shape="circle">
-        </map>
+        <p>제주의 현재온도는 <span id="temp">10</span>도</p>
     </div>
-    <div id="post">
+    <ul class="nav-container">
+        <li class="nav-item">
+            <a class="nav-link" href="/">전체</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/hankyeong">한경면</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/hanlim">한림읍</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/aewol">애월읍</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/jeju">제주시</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/jocheon">조천읍</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/gujwa">구좌읍</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/seongsan">성산읍</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/pyoseon">표선면</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/namwon">남원읍</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/seogwipo">서귀포시</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/joongmoon">중문</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/andeok">안덕면</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/nav/daejeong">대정읍</a>
+        </li>
+    </ul>
+    <div id="post-Oreum">
         <div class="mycard" id="cards-box">
             <img src="https://api.cdn.visitjeju.net/photomng/imgpath/201804/30/a23c27ea-3590-437f-a735-f5cb2137545b.jpg"
                  class="card-img-top" alt="솔오름">
@@ -245,17 +327,23 @@
                 <tr>
                     <th scope="row">가나다</th>
                     <td>완전 좋은 곳!</td>
-                    <td><button>삭제</button></td>
+                    <td>
+                        <button>삭제</button>
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">아자차</th>
                     <td>지금 여기 왔는데 너무 좋아요.</td>
-                    <td><button>삭제</button></td>
+                    <td>
+                        <button>삭제</button>
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">타파하</th>
                     <td>제주에 이런곳이!</td>
-                    <td><button>삭제</button></td>
+                    <td>
+                        <button>삭제</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>

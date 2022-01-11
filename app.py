@@ -12,6 +12,12 @@ db = client.dbOreum
 def home():
     return render_template('index.html')
 
+# 오름 API
+@app.route('/nav/<title>', methods=['GET'])
+def nav(title):
+    oreums = list(db.myOreum.find({},{'_id':False}))
+    return jsonify({'title_oreums': oreums})
+
 # 리뷰 작성하기
 @app.route('/review', methods=['POST'])
 def make_review():
